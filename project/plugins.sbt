@@ -1,10 +1,11 @@
-addSbtPlugin("io.spray" % "sbt-revolver" % "0.9.1")
+addSbtPlugin("io.spray" % "sbt-revolver" % "0.10.0")
 
-val sbtDevOopsVersion = "2.16.0"
+val sbtDevOopsVersion = "3.3.1"
 
 addSbtPlugin("io.kevinlee" %% "sbt-devoops-scala"     % sbtDevOopsVersion)
 addSbtPlugin("io.kevinlee" %% "sbt-devoops-sbt-extra" % sbtDevOopsVersion)
+addSbtPlugin("io.kevinlee" %% "sbt-devoops-starter" % sbtDevOopsVersion)
 
-addSbtPlugin("org.wartremover" % "sbt-wartremover" % "2.4.16")
-addSbtPlugin("ch.epfl.scala"   % "sbt-scalafix"    % "0.9.34")
-addSbtPlugin("org.scalameta"   % "sbt-scalafmt"    % "2.4.6")
+addSbtPlugin("org.wartremover" % "sbt-wartremover" % "3.4.1")
+addSbtPlugin("ch.epfl.scala"   % "sbt-scalafix"    % "0.14.4")
+addSbtPlugin("org.scalameta"   % "sbt-scalafmt"    % "2.5.6")
