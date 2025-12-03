@@ -1,8 +1,8 @@
-http4s-example-app
+cats-mtl-example-app
 ==================
-[![Build Status](https://github.com/Kevin-Lee/http4s-example-app/workflows/Build-All/badge.svg)](https://github.com/Kevin-Lee/http4s-example-app/actions?workflow=Build-All)
-[![Build Status](https://github.com/Kevin-Lee/http4s-example-app/workflows/Launch%20Scala%20Steward/badge.svg)](https://github.com/Kevin-Lee/http4s-example-app/actions?workflow=Launch%20Scala%20Steward)
-[![Build Status](https://github.com/Kevin-Lee/http4s-example-app/workflows/PR%20Labeler/badge.svg)](https://github.com/Kevin-Lee/http4s-example-app/actions?workflow=PR%20Labeler)
+[![Build Status](https://github.com/Kevin-Lee/cats-mtl-example-app/workflows/Build-All/badge.svg)](https://github.com/Kevin-Lee/cats-mtl-example-app/actions?workflow=Build-All)
+[![Build Status](https://github.com/Kevin-Lee/cats-mtl-example-app/workflows/Launch%20Scala%20Steward/badge.svg)](https://github.com/Kevin-Lee/cats-mtl-example-app/actions?workflow=Launch%20Scala%20Steward)
+[![Build Status](https://github.com/Kevin-Lee/cats-mtl-example-app/workflows/PR%20Labeler/badge.svg)](https://github.com/Kevin-Lee/cats-mtl-example-app/actions?workflow=PR%20Labeler)
 
 How to Run
 ----------
