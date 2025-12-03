@@ -20,7 +20,7 @@ jobs:
     strategy:
       matrix:
         scala:
-          - { name: "Scala 2", version: "2.13.7",    binary-version: "2.13",      java-version: "adopt@1.11", report: "" }
+          - { name: "Scala 2", version: "3.7.4",    binary-version: "2.13",      java-version: "adopt@1.11", report: "" }
 
     steps:
       - uses: actions/checkout@v3
