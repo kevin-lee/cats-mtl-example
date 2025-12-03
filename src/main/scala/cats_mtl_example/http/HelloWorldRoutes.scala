@@ -1,15 +1,18 @@
-package io.kevinlee.http4sexampleapp
+package cats_mtl_example.http
 
-import cats.effect._
+import cats.effect.Sync
 import io.circe.Json
 import org.http4s.HttpRoutes
-import org.http4s.circe._
 import org.http4s.dsl.Http4sDsl
+import org.http4s.circe.*
 
-object HelloWorldService {
+/** @author Kevin Lee
+  * @since 2022-04-02
+  */
+object HelloWorldRoutes {
 
-  def service[F[_]: Sync](implicit dsl: Http4sDsl[F]): HttpRoutes[F] = {
-    import dsl._
+  def apply[F[_]: Sync](using dsl: Http4sDsl[F]): HttpRoutes[F] = {
+    import dsl.*
     HttpRoutes.of[F] {
       case GET -> Root =>
         Ok(Json.obj("message" -> Json.fromString("Hello, World")))
