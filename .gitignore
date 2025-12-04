@@ -15,3 +15,8 @@ lib_managed
 
 *.class
 *.log
+
+.vscode/
+.metals/
+.bsp/
+.bloop/
