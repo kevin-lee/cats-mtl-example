@@ -4,7 +4,7 @@ import cats.effect.*
 import cats.syntax.all.*
 import cats_mtl_example.config.AppConfig
 import cats_mtl_example.external.JokeClient
-import cats_mtl_example.http.{HelloWorldRoutes, JokeRoutes, StaticHtmlRoutes}
+import cats_mtl_example.http.{HelloWorldRoutes, IndexRoutes, JokeRoutes, StaticHtmlRoutes}
 import cats_mtl_example.service.Hello
 import fs2.Stream
 import org.http4s.HttpRoutes
@@ -47,11 +47,17 @@ object MainServer {
     StaticHtmlRoutes[F](dsl.NotFound())
   }
 
+  def indexRoutes[F[*]: {Sync, Http4sDsl as dsl}]: HttpRoutes[F] = {
+    import dsl.*
+    IndexRoutes[F](dsl.NotFound())
+  }
+
 //  def jokeRoutes[F[*]: {Async, Http4sDsl}](using client: JokeClient[F], H: Handle[F, HttpError]): HttpRoutes[F] =
 //    JokeRoutes[F]
 
   def appRoutes[F[*]: {Sync, Http4sDsl}](hello: Hello[F]): HttpRoutes[F] =
     Router(
+      "/"      -> indexRoutes,
       "/hello" -> helloWorldService(hello),
       "/html"  -> staticHtmlService,
     )
