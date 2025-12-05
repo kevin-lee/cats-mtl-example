@@ -15,6 +15,9 @@ import org.http4s.{Method, Request, Response, Status, Uri}
   */
 object HelloWorldSpec extends Properties, CatsEffectRunner {
 
+  type F[A] = IO[A]
+  val F: IO.type = IO
+
   override def tests: List[Test] = List(
     example(helloWorldService("""/ should return "Hello, World""""), testSlashShouldReturnHelloWorld),
     example(helloWorldService("""/ should return 200""""), testSlashShouldReturn200),
@@ -36,21 +39,21 @@ object HelloWorldSpec extends Properties, CatsEffectRunner {
 
   private def helloWorldService(testDesc: String): String = s"HelloWorldService $testDesc"
 
-  given ioDsl: Http4sDsl[IO] = org.http4s.dsl.io
+  given ioDsl: Http4sDsl[F] = org.http4s.dsl.io
 
-  def retHelloWorld(path: String): IO[Response[IO]] = {
-    val hello            = Hello[IO]
-    val helloWorldRoutes = HelloWorldRoutes[IO](hello)
+  def retHelloWorld(path: String): IO[Response[F]] = {
+    val hello            = Hello[F]
+    val helloWorldRoutes = HelloWorldRoutes[F](hello)
     val httpEncodedPath  = Uri.encode(s"/$path")
     for {
 
-      uri <- IO.delay(Uri.fromString(httpEncodedPath))
+      uri <- F.delay(Uri.fromString(httpEncodedPath))
                .eitherT
                .foldF(
-                 IO.raiseError(_),
-                 IO(_)
+                 F.raiseError(_),
+                 F.delay(_)
                )
-      getHW = Request[IO](Method.GET, uri)
+      getHW = Request[F](Method.GET, uri)
       response <- helloWorldRoutes.orNotFound(getHW)
     } yield response
   }
@@ -87,7 +90,10 @@ object HelloWorldSpec extends Properties, CatsEffectRunner {
       name <- Gen.string(Gen.alpha, Range.linear(1, 10)).log("name")
     } yield runIO {
       val expected = Status.Ok
-      retHelloWorld(name).map(_.status).map { actual =>
+      for {
+        response <- retHelloWorld(name)
+        actual = response.status
+      } yield {
         actual ==== expected
       }
     }
@@ -105,11 +111,16 @@ object HelloWorldSpec extends Properties, CatsEffectRunner {
       _    <- Gen.constant(name.encodeToUnicode).log("nameInUnicode")
     } yield runIO {
       import io.circe.literal.*
-      val value    =
-        s"A blank String is given for the name. The name can't be a blank String. value='$name' / unicode=${name.encodeToUnicode}"
-      val expected =
-        json"""{ "error": $value }"""
-      retHelloWorld(name).flatMap(_.as[String]).map { actual =>
+      val value =
+        "A blank String is given for the name. The name can't be a blank String. " +
+          s"value='$name' / unicode=${name.encodeToUnicode}"
+
+      val expected = json"""{ "error": $value }"""
+
+      for {
+        response <- retHelloWorld(name)
+        actual   <- response.as[String]
+      } yield {
         actual ==== expected.noSpaces
       }
     }
