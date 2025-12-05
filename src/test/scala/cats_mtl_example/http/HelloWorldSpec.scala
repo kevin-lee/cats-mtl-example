@@ -3,6 +3,7 @@ package cats_mtl_example.http
 import cats.effect.IO
 import cats_mtl_example.service.Hello
 import extras.cats.syntax.all.*
+import extras.core.syntax.all.*
 import extras.hedgehog.ce3.CatsEffectRunner
 import hedgehog.*
 import hedgehog.runner.*
@@ -20,6 +21,14 @@ object HelloWorldSpec extends Properties, CatsEffectRunner {
     property(helloWorldService("""/{name} should return "Hello, {name}""""), testSlashNameShouldReturnHelloName),
     property(helloWorldService("/{name} should return 200"), testSlashNameShouldReturn200),
     property(
+      helloWorldService("""/{name} should return {"error": message... } when the given name is a blank String"""),
+      testSlashNameShouldReturnErrorForBlankStringName
+    ),
+    property(
+      helloWorldService("/{name} should return 400 when the given name is a blank String"),
+      testSlashNameShouldReturn400ForBlankStringName
+    ),
+    property(
       helloWorldService("/{add}/int1/int2 should return the result of int1 + int2"),
       testSlashAddInt1Int2ShouldReturnInt1PlusInt2
     ),
@@ -32,9 +41,10 @@ object HelloWorldSpec extends Properties, CatsEffectRunner {
   def retHelloWorld(path: String): IO[Response[IO]] = {
     val hello            = Hello[IO]
     val helloWorldRoutes = HelloWorldRoutes[IO](hello)
+    val httpEncodedPath  = Uri.encode(s"/$path")
     for {
 
-      uri <- IO.delay(Uri.fromString(raw"/$path"))
+      uri <- IO.delay(Uri.fromString(httpEncodedPath))
                .eitherT
                .foldF(
                  IO.raiseError(_),
@@ -77,6 +87,46 @@ object HelloWorldSpec extends Properties, CatsEffectRunner {
       name <- Gen.string(Gen.alpha, Range.linear(1, 10)).log("name")
     } yield runIO {
       val expected = Status.Ok
+      retHelloWorld(name).map(_.status).map { actual =>
+        actual ==== expected
+      }
+    }
+
+  def testSlashNameShouldReturnErrorForBlankStringName: Property =
+    for {
+      name <- Gen
+                .string(
+                  Gen.element1('\u0009', '\u000a', '\u000b', '\u000c', '\u000d', '\u001c', '\u001d', '\u001e', '\u001f',
+                    '\u0020', '\u1680', '\u2000', '\u2001', '\u2002', '\u2003', '\u2004', '\u2005', '\u2006', '\u2008',
+                    '\u2009', '\u200a', '\u2028', '\u2029', '\u205f', '\u3000'),
+                  Range.linear(1, 10)
+                )
+                .log("name")
+      _    <- Gen.constant(name.encodeToUnicode).log("nameInUnicode")
+    } yield runIO {
+      import io.circe.literal.*
+      val value    =
+        s"A blank String is given for the name. The name can't be a blank String. value='$name' / unicode=${name.encodeToUnicode}"
+      val expected =
+        json"""{ "error": $value }"""
+      retHelloWorld(name).flatMap(_.as[String]).map { actual =>
+        actual ==== expected.noSpaces
+      }
+    }
+
+  def testSlashNameShouldReturn400ForBlankStringName: Property =
+    for {
+      name <- Gen
+                .string(
+                  Gen.element1('\u0009', '\u000a', '\u000b', '\u000c', '\u000d', '\u001c', '\u001d', '\u001e', '\u001f',
+                    '\u0020', '\u1680', '\u2000', '\u2001', '\u2002', '\u2003', '\u2004', '\u2005', '\u2006', '\u2008',
+                    '\u2009', '\u200a', '\u2028', '\u2029', '\u205f', '\u3000'),
+                  Range.linear(1, 10)
+                )
+                .log("name")
+      _    <- Gen.constant(name.encodeToUnicode).log("nameInUnicode")
+    } yield runIO {
+      val expected = Status.BadRequest
       retHelloWorld(name).map(_.status).map { actual =>
         actual ==== expected
       }
