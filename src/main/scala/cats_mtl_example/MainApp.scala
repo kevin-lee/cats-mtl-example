@@ -4,6 +4,7 @@ import cats.effect.{IO, IOApp}
 import cats.syntax.all.*
 import cats_mtl_example.config.AppConfig
 import cats_mtl_example.config.AppConfig.InvalidConfigError
+import cats_mtl_example.data.error.AppError
 import extras.cats.syntax.all.*
 import org.http4s.dsl.{Http4sDsl, Http4sDslBinCompat}
 
@@ -28,6 +29,6 @@ object MainApp extends IOApp.Simple {
                      .drain
                      .rightT
     } yield ())
-      .foldF(err => IO.raiseError(err), _ => IO.unit)
+      .foldF(err => IO.raiseError(AppError.toException(err)), _ => IO.unit)
 
 }

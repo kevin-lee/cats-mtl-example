@@ -1,12 +1,11 @@
 package cats_mtl_example.external
 
-import cats.syntax.all.*
 import cats.effect.Concurrent
-import cats_mtl_example.data.error.AppError
+import cats.syntax.all.*
 import fs2.text
 import org.http4s
-import org.http4s.{EntityDecoder, Response}
 import org.http4s.Status.Successful
+import org.http4s.{EntityDecoder, Response}
 import refined4s.*
 import refined4s.types.all.*
 
@@ -81,8 +80,8 @@ object types {
 
   }
 
-  sealed abstract class HttpError(override val message: String) extends AppError(message)
-
+//  sealed abstract class HttpError(override val message: String) extends AppError(message)
+  sealed abstract class HttpError(val message: String)
   object HttpError {
     final case class ResponseBodyDecodingFailure(override val message: String, cause: Option[Throwable])
         extends HttpError(message)
@@ -102,7 +101,7 @@ object types {
         s"Decoding ResponseBody has failed: message=$message, cause=${cause.fold("")(_.toString)}"
 
       case err @ FailedResponse(_) =>
-        s"Response failure: ${err.getMessage}"
+        s"Response failure: ${err.message}"
     }
   }
 }

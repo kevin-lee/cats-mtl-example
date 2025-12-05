@@ -1,6 +1,7 @@
 package cats_mtl_example.http
 
 import cats.effect.IO
+import cats_mtl_example.service.Hello
 import extras.cats.syntax.all.*
 import extras.hedgehog.ce3.CatsEffectRunner
 import hedgehog.*
@@ -28,21 +29,25 @@ object HelloWorldSpec extends Properties, CatsEffectRunner {
 
   given ioDsl: Http4sDsl[IO] = org.http4s.dsl.io
 
-  def retHelloWorld(path: String): IO[Response[IO]] = for {
+  def retHelloWorld(path: String): IO[Response[IO]] = {
+    val hello            = Hello[IO]
+    val helloWorldRoutes = HelloWorldRoutes[IO](hello)
+    for {
 
-    uri <- IO.delay(Uri.fromString(raw"/$path"))
-             .eitherT
-             .foldF(
-               IO.raiseError(_),
-               IO(_)
-             )
-    getHW = Request[IO](Method.GET, uri)
-    response <- HelloWorldRoutes.apply[IO].orNotFound(getHW)
-  } yield response
+      uri <- IO.delay(Uri.fromString(raw"/$path"))
+               .eitherT
+               .foldF(
+                 IO.raiseError(_),
+                 IO(_)
+               )
+      getHW = Request[IO](Method.GET, uri)
+      response <- helloWorldRoutes.orNotFound(getHW)
+    } yield response
+  }
 
   def testSlashShouldReturnHelloWorld: Result = runIO {
 
-    val expected = raw"""{"message":"Hello, World"}"""
+    val expected = raw"""{"message":"Hello, World!"}"""
 
     retHelloWorld("").flatMap(_.as[String]).map { actual =>
       actual ==== expected

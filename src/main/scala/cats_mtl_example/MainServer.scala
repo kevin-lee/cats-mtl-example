@@ -5,6 +5,7 @@ import cats.syntax.all.*
 import cats_mtl_example.config.AppConfig
 import cats_mtl_example.external.JokeClient
 import cats_mtl_example.http.{HelloWorldRoutes, JokeRoutes, StaticHtmlRoutes}
+import cats_mtl_example.service.Hello
 import fs2.Stream
 import org.http4s.HttpRoutes
 import org.http4s.blaze.client.BlazeClientBuilder
@@ -25,8 +26,10 @@ object MainServer {
       given Client[F]     = client
       given JokeClient[F] = JokeClient[F]
 
+      hello = Hello[F]
+
       jokeRoutes = JokeRoutes[F]
-      httpApp    = (appRoutes <+> jokeRoutes).orNotFound
+      httpApp    = (appRoutes(hello) <+> jokeRoutes).orNotFound
       exitCode <- BlazeServerBuilder[F]
                     .bindHttp(
                       appConfig.server.port.value.value,
@@ -36,8 +39,8 @@ object MainServer {
                     .serve
     } yield exitCode
 
-  def helloWorldService[F[*]: {Sync, Http4sDsl}]: HttpRoutes[F] =
-    HelloWorldRoutes[F]
+  def helloWorldService[F[*]: {Sync, Http4sDsl}](hello: Hello[F]): HttpRoutes[F] =
+    HelloWorldRoutes[F](hello)
 
   def staticHtmlService[F[*]: Sync](using dsl: Http4sDsl[F]): HttpRoutes[F] = {
     import dsl.*
@@ -47,9 +50,9 @@ object MainServer {
 //  def jokeRoutes[F[*]: {Async, Http4sDsl}](using client: JokeClient[F], H: Handle[F, HttpError]): HttpRoutes[F] =
 //    JokeRoutes[F]
 
-  def appRoutes[F[*]: {Sync, Http4sDsl}]: HttpRoutes[F] =
+  def appRoutes[F[*]: {Sync, Http4sDsl}](hello: Hello[F]): HttpRoutes[F] =
     Router(
-      "/hello" -> helloWorldService,
+      "/hello" -> helloWorldService(hello),
       "/html"  -> staticHtmlService,
     )
 
