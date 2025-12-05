@@ -6,16 +6,16 @@ import org.http4s.dsl.Http4sDsl
 import org.http4s.{HttpRoutes, Response, StaticFile}
 
 /** @author Kevin Lee
-  * @since 2018-06-16
+  * @since 2025-12-06
   */
-object StaticHtmlRoutes {
+object IndexRoutes {
   def apply[F[_]: {Sync, Http4sDsl as dsl}](notFound: => F[Response[F]]): HttpRoutes[F] = {
     import dsl.*
     HttpRoutes.of[F] {
 
-      case request @ GET -> Root / filename if filename.endsWith(".html") =>
+      case request @ GET -> Root =>
         StaticFile
-          .fromResource[F](name = s"/static/$filename", req = request.some)
+          .fromResource[F](name = "/static/index.html", req = request.some)
           .getOrElseF(notFound)
     }
   }
