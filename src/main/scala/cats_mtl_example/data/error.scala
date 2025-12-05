@@ -15,7 +15,7 @@ object error {
 //    override def getMessage: String = message
 //  }
 
-  // TODO: Since errors from Routes were handled inside Routes, this need to be redesigned.
+  // TODO: Since errors from Routes were handled inside Routes, this needs to be redesigned.
   type AppError = AppConfig.InvalidConfigError | HttpError | Hello.InvalidNameError
   object AppError {
 

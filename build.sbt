@@ -62,7 +62,12 @@ lazy val libs = new {
   lazy val catsEffect = "org.typelevel" %% "cats-effect" % props.CatsEffectVersion
   lazy val catsMtl    = "org.typelevel" %% "cats-mtl"    % props.CatsMtlVersion
 
-  lazy val circeGeneric = "io.circe" %% "circe-generic" % props.CirceVersion
+  lazy val circe = List(
+    "io.circe" %% "circe-core"    % props.CirceVersion,
+    "io.circe" %% "circe-generic" % props.CirceVersion,
+    "io.circe" %% "circe-parser"  % props.CirceVersion,
+    "io.circe" %% "circe-literal" % props.CirceVersion,
+  )
 
   lazy val http4s = List(
     "org.http4s" %% "http4s-blaze-server" % props.Http4sBlazeVersion,
@@ -97,7 +102,6 @@ lazy val libs = new {
       cats,
       catsEffect,
       catsMtl,
-      circeGeneric,
       pureconfigCirce,
 //      pureconfigGeneric,
       pureconfigCatsEffect,
@@ -105,5 +109,5 @@ lazy val libs = new {
       kittens,
       logback
     ) ++
-      extras ++ refined4s ++ http4s ++ testLibs
+      circe ++ extras ++ refined4s ++ http4s ++ testLibs
 }
