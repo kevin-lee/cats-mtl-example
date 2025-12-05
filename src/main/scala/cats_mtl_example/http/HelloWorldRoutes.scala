@@ -1,14 +1,15 @@
 package cats_mtl_example.http
 
 import cats.effect.Sync
-import cats.syntax.all.*
 import cats.mtl.Handle
+import cats.syntax.all.*
+import cats_mtl_example.http.types.{ErrorMessage, ResultResponse}
 import cats_mtl_example.service.Hello
 import extras.render.syntax.*
-import io.circe.Json
 import org.http4s.HttpRoutes
-import org.http4s.dsl.Http4sDsl
 import org.http4s.circe.*
+import org.http4s.circe.CirceEntityCodec.circeEntityEncoder
+import org.http4s.dsl.Http4sDsl
 
 /** @author Kevin Lee
   * @since 2022-04-02
@@ -21,7 +22,7 @@ object HelloWorldRoutes {
       case GET -> Root =>
         for {
           helloWorld <- hello.world
-          response   <- Ok(Json.obj("message" -> Json.fromString(helloWorld)))
+          response   <- Ok(ResultResponse(helloWorld))
         } yield response
 
       case GET -> Root / name =>
@@ -29,13 +30,13 @@ object HelloWorldRoutes {
           .allow(
             for {
               helloMessage <- hello.hello(name)
-              response     <- Ok(Json.obj("message" -> Json.fromString(helloMessage)))
+              response     <- Ok(ResultResponse(helloMessage))
             } yield response
           )
-          .rescue(err => BadRequest(Json.obj("error" -> Json.fromString(err.render))))
+          .rescue(err => BadRequest(ErrorMessage(err.render)))
 
       case GET -> Root / "add" / IntVar(a) / IntVar(b) =>
-        Ok(Json.obj("result" -> Json.fromLong(a.toLong + b.toLong)))
+        Ok(ResultResponse(a.toLong + b.toLong))
     }
   }
 }

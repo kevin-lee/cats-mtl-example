@@ -1,8 +1,8 @@
 cats-mtl-example-app
 ==================
-[![Build Status](https://github.com/Kevin-Lee/cats-mtl-example-app/workflows/Build-All/badge.svg)](https://github.com/Kevin-Lee/cats-mtl-example-app/actions?workflow=Build-All)
-[![Build Status](https://github.com/Kevin-Lee/cats-mtl-example-app/workflows/Launch%20Scala%20Steward/badge.svg)](https://github.com/Kevin-Lee/cats-mtl-example-app/actions?workflow=Launch%20Scala%20Steward)
-[![Build Status](https://github.com/Kevin-Lee/cats-mtl-example-app/workflows/PR%20Labeler/badge.svg)](https://github.com/Kevin-Lee/cats-mtl-example-app/actions?workflow=PR%20Labeler)
+[![Build-All](https://github.com/kevin-lee/cats-mtl-example/actions/workflows/build.yml/badge.svg)](https://github.com/kevin-lee/cats-mtl-example/actions/workflows/build.yml)
+[![Check-All](https://github.com/kevin-lee/cats-mtl-example/actions/workflows/checks.yml/badge.svg)](https://github.com/kevin-lee/cats-mtl-example/actions/workflows/checks.yml)
+[![Launch Scala Steward](https://github.com/kevin-lee/cats-mtl-example/actions/workflows/scala-steward.yml/badge.svg)](https://github.com/kevin-lee/cats-mtl-example/actions/workflows/scala-steward.yml)
 
 How to Run
 ----------
@@ -28,14 +28,14 @@ In development, `reStart` and `reStop` are recommended to start and stop the app
 1. Access [http://localhost:8080/hello](http://localhost:8080/hello) in your web browser. It will give the following JSON.
     ```json
     {
-      "message": "Hello, World"
+      "result": "Hello, World!"
     }
     ```
 
 2. Access [http://localhost:8080/hello/YOUR_NAME](http://localhost:8080/hello/YOUR_NAME) in your web browser. It will give the following JSON.
     ```json
     {
-      "message": "Hello, YOUR_NAME"
+      "result": "Hello, YOUR_NAME"
     }
     ``` 
 
