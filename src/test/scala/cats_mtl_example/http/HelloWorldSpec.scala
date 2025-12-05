@@ -60,7 +60,7 @@ object HelloWorldSpec extends Properties, CatsEffectRunner {
 
   def testSlashShouldReturnHelloWorld: Result = runIO {
 
-    val expected = raw"""{"message":"Hello, World!"}"""
+    val expected = raw"""{"result":"Hello, World!"}"""
 
     retHelloWorld("").flatMap(_.as[String]).map { actual =>
       actual ==== expected
@@ -79,7 +79,7 @@ object HelloWorldSpec extends Properties, CatsEffectRunner {
     for {
       name <- Gen.string(Gen.alpha, Range.linear(1, 10)).log("name")
     } yield runIO {
-      val expected = raw"""{"message":"Hello, $name"}"""
+      val expected = raw"""{"result":"Hello, $name"}"""
       retHelloWorld(name).flatMap(_.as[String]).map { actual =>
         actual ==== expected
       }
