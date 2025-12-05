@@ -5,6 +5,7 @@ ThisBuild / version      := props.ProjectVersion
 lazy val http4sExampleApp = (project in file("."))
   .settings(
     name              := props.ProjectName,
+    scalacOptions ++= List("-explain"),
     semanticdbEnabled := true,
     semanticdbVersion := scalafixSemanticdb.revision,
     wartremoverErrors ++= Warts.allBut(Wart.ImplicitParameter, Wart.ImplicitConversion, Wart.Any, Wart.Nothing),

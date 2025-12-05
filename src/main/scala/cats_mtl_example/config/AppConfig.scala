@@ -1,14 +1,13 @@
 package cats_mtl_example.config
 
 import cats.effect.*
-import cats_mtl_example.data.error.AppError
-import refined4s.*
-import refined4s.types.all.*
-import refined4s.modules.pureconfig.derivation.types.all.given
 import org.http4s.Uri
 import pureconfig.module.http4s.*
 import pureconfig.{ConfigReader, ConfigSource}
+import refined4s.*
 import refined4s.modules.pureconfig.derivation.PureconfigNewtypeConfigReader
+import refined4s.modules.pureconfig.derivation.types.all.given
+import refined4s.types.all.*
 
 /** @author Kevin Lee
   * @since 2022-04-02
@@ -30,6 +29,6 @@ object AppConfig {
     object Port extends Newtype[PortNumber], PureconfigNewtypeConfigReader[PortNumber]
   }
 
-  final case class InvalidConfigError(override val message: String) extends AppError(message)
+  final case class InvalidConfigError(message: String)
 
 }

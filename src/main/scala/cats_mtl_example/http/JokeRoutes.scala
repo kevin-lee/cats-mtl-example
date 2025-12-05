@@ -4,7 +4,6 @@ import cats.*
 import cats.effect.*
 import cats.mtl.Handle
 import cats.syntax.all.*
-import cats_mtl_example.data.error.AppError
 import cats_mtl_example.external.JokeClient
 import cats_mtl_example.external.types.HttpError
 import org.http4s.*
@@ -30,8 +29,27 @@ object JokeRoutes {
               resp <- Ok(joke)
             } yield resp
           )
-          .rescue(err => InternalServerError(AppError.render(err)))
+          .rescue {
+            case HttpError.ResponseBodyDecodingFailure(message, _) =>
+              InternalServerError(s"Something went wrong: $message".asJson)
+            case err @ HttpError.FailedResponse(response) =>
+              InternalServerError(s"Something went wrong: ${err.message}".asJson)
+          }
     }
+// OR
+
+//    val jokeRoutesErrorHandler = JokeRoutesErrorHandler[F]
+//    HttpRoutes.of[F] {
+//      case GET -> Root / "joke" =>
+//        jokeRoutesErrorHandler
+//          .handle(
+//            for {
+//              joke <- jokeClient.getJoke
+//              resp <- Ok(joke)
+//            } yield resp
+//          )
+//    }
+
   }
 
   class JokeRoutesErrorHandler[F[*]](using MonadError[F[*], HttpError])
@@ -42,7 +60,7 @@ object JokeRoutes {
       case HttpError.ResponseBodyDecodingFailure(message, _) =>
         InternalServerError(s"Something went wrong: $message".asJson)
       case err @ HttpError.FailedResponse(response) =>
-        InternalServerError(s"Something went wrong: ${err.getMessage}".asJson)
+        InternalServerError(s"Something went wrong: ${err.message}".asJson)
     }
 
     val jokeRoutesErrorHandler: RoutesErrorHandler[F, HttpError] = RoutesErrorHandler(handler)
