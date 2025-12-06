@@ -31,12 +31,16 @@ lazy val props = new {
 
   val CirceVersion = "0.14.15"
 
+  val EffectieVersion = "2.2.0"
+
   val Http4sVersion      = "0.23.33"
   val Http4sBlazeVersion = "0.23.17"
 
   val PureconfigVersion = "0.17.9"
 
   val LogbackVersion = "1.5.21"
+
+  val LoggerFVersion = "2.8.0"
 
   val extrasVersion = "0.49.0"
 
@@ -81,7 +85,16 @@ lazy val libs = new {
   lazy val pureconfigCatsEffect = "com.github.pureconfig" %% "pureconfig-cats-effect" % props.PureconfigVersion
   lazy val pureconfigHttp4s     = "com.github.pureconfig" %% "pureconfig-http4s"      % props.PureconfigVersion
 
+  lazy val effectie = List(
+    "io.kevinlee" %% "effectie-cats-effect3" % props.EffectieVersion,
+  )
+
   lazy val logback = "ch.qos.logback" % "logback-classic" % props.LogbackVersion
+
+  lazy val loggerF = List(
+    "io.kevinlee" %% "logger-f-cats"  % props.LoggerFVersion,
+    "io.kevinlee" %% "logger-f-slf4j" % props.LoggerFVersion,
+  )
 
   lazy val extras = List(
     "io.kevinlee" %% "extras-cats"         % props.extrasVersion,
@@ -108,6 +121,6 @@ lazy val libs = new {
       pureconfigHttp4s,
       kittens,
       logback
-    ) ++
+    ) ++ effectie ++ loggerF ++
       circe ++ extras ++ refined4s ++ http4s ++ testLibs
 }

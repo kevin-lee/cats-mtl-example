@@ -8,6 +8,7 @@ import cats_mtl_example.http.{HelloWorldRoutes, IndexRoutes, JokeRoutes, StaticH
 import cats_mtl_example.service.Hello
 import extras.render.syntax.*
 import fs2.Stream
+import loggerf.core.Log
 import org.http4s.HttpApp
 import org.http4s.blaze.client.BlazeClientBuilder
 import org.http4s.blaze.server.BlazeServerBuilder
@@ -19,7 +20,7 @@ import org.http4s.server.Router
   */
 object MainServer {
 
-  def stream[F[*]: {Async, Http4sDsl}](appConfig: AppConfig): Stream[F, ExitCode] =
+  def stream[F[*]: {Async, Log, Http4sDsl}](appConfig: AppConfig): Stream[F, ExitCode] =
     for {
 
       client <- BlazeClientBuilder[F].stream
@@ -35,7 +36,7 @@ object MainServer {
                     .serve
     } yield exitCode
 
-  def buildHttpApp[F[*]: {Sync, Http4sDsl as dsl}](
+  def buildHttpApp[F[*]: {Sync, Log, Http4sDsl as dsl}](
     jokeClient: JokeClient[F],
     hello: Hello[F]
   ): HttpApp[F] = {
