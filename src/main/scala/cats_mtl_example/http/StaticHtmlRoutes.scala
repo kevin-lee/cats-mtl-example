@@ -9,14 +9,14 @@ import org.http4s.{HttpRoutes, Response, StaticFile}
   * @since 2018-06-16
   */
 object StaticHtmlRoutes {
-  def apply[F[_]: {Sync, Http4sDsl as dsl}](notFound: => F[Response[F]]): HttpRoutes[F] = {
+  def apply[F[_]: {Sync, Http4sDsl as dsl}](notFound: (String => String) => F[Response[F]]): HttpRoutes[F] = {
     import dsl.*
     HttpRoutes.of[F] {
 
       case request @ GET -> Root / filename if filename.endsWith(".html") =>
         StaticFile
           .fromResource[F](name = s"/static/$filename", req = request.some)
-          .getOrElseF(notFound)
+          .getOrElseF(notFound(prefix => s"HTML file not found at $prefix/$filename"))
     }
   }
 }

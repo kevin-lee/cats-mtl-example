@@ -15,9 +15,8 @@ import io.circe.syntax.*
   * @since 2022-04-03
   */
 object JokeRoutes {
-  def apply[F[*]: Sync](
-    using jokeClient: JokeClient[F],
-    dsl: Http4sDsl[F],
+  def apply[F[*]: {Sync, Http4sDsl as dsl}](
+    jokeClient: JokeClient[F],
   ): HttpRoutes[F] = {
     import dsl.*
     HttpRoutes.of[F] {
@@ -52,7 +51,7 @@ object JokeRoutes {
 
   }
 
-  class JokeRoutesErrorHandler[F[*]](using MonadError[F[*], HttpError])
+  class JokeRoutesErrorHandler[F[*]: [G[*]] =>> MonadError[G, HttpError]]
       extends RoutesErrorHandler[F, HttpError]
       with Http4sDsl[F] {
 
