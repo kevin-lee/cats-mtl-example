@@ -6,11 +6,11 @@ import cats_mtl_example.config.AppConfig
 import cats_mtl_example.external.JokeClient
 import cats_mtl_example.http.{HelloWorldRoutes, IndexRoutes, JokeRoutes, StaticHtmlRoutes}
 import cats_mtl_example.service.Hello
+import extras.render.syntax.*
 import fs2.Stream
-import org.http4s.HttpRoutes
+import org.http4s.HttpApp
 import org.http4s.blaze.client.BlazeClientBuilder
 import org.http4s.blaze.server.BlazeServerBuilder
-import org.http4s.client.Client
 import org.http4s.dsl.Http4sDsl
 import org.http4s.server.Router
 
@@ -23,43 +23,30 @@ object MainServer {
     for {
 
       client <- BlazeClientBuilder[F].stream
-      given Client[F]     = client
-      given JokeClient[F] = JokeClient[F]
-
-      hello = Hello[F]
-
-      jokeRoutes = JokeRoutes[F]
-      httpApp    = (appRoutes(hello) <+> jokeRoutes).orNotFound
+      jokeClient = JokeClient[F](client)
+      hello      = Hello[F]
+      httpApp    = buildHttpApp(jokeClient, hello)
       exitCode <- BlazeServerBuilder[F]
                     .bindHttp(
-                      appConfig.server.port.value.value,
-                      appConfig.server.host.value.renderString
+                      port = appConfig.server.port.toValue,
+                      host = appConfig.server.host.render
                     )
                     .withHttpApp(httpApp)
                     .serve
     } yield exitCode
 
-  def helloWorldService[F[*]: {Sync, Http4sDsl}](hello: Hello[F]): HttpRoutes[F] =
-    HelloWorldRoutes[F](hello)
-
-  def staticHtmlService[F[*]: Sync](using dsl: Http4sDsl[F]): HttpRoutes[F] = {
+  def buildHttpApp[F[*]: {Sync, Http4sDsl as dsl}](
+    jokeClient: JokeClient[F],
+    hello: Hello[F]
+  ): HttpApp[F] = {
     import dsl.*
-    StaticHtmlRoutes[F](dsl.NotFound())
-  }
-
-  def indexRoutes[F[*]: {Sync, Http4sDsl as dsl}]: HttpRoutes[F] = {
-    import dsl.*
-    IndexRoutes[F](dsl.NotFound())
-  }
-
-//  def jokeRoutes[F[*]: {Async, Http4sDsl}](using client: JokeClient[F], H: Handle[F, HttpError]): HttpRoutes[F] =
-//    JokeRoutes[F]
-
-  def appRoutes[F[*]: {Sync, Http4sDsl}](hello: Hello[F]): HttpRoutes[F] =
-    Router(
-      "/"      -> indexRoutes,
-      "/hello" -> helloWorldService(hello),
-      "/html"  -> staticHtmlService,
+    val appRoutes  = Router(
+      "/"      -> IndexRoutes[F](dsl.NotFound()),
+      "/hello" -> HelloWorldRoutes[F](hello),
+      "/html"  -> StaticHtmlRoutes[F](f => dsl.NotFound(f("/html"))),
     )
+    val jokeRoutes = JokeRoutes[F](jokeClient)
+    (appRoutes <+> jokeRoutes).orNotFound
+  }
 
 }

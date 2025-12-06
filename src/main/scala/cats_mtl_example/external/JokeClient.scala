@@ -31,9 +31,9 @@ trait JokeClient[F[*]] {
 }
 object JokeClient {
 
-  def apply[F[*]: {Concurrent, Client}]: JokeClient[F] = JokeClientF[F]
+  def apply[F[*]: Concurrent](client: Client[F]): JokeClient[F] = JokeClientF[F](client)
 
-  private final class JokeClientF[F[*]: {Concurrent, Client as client}] extends JokeClient[F], Http4sClientDsl[F] {
+  private final class JokeClientF[F[*]: Concurrent](client: Client[F]) extends JokeClient[F], Http4sClientDsl[F] {
     val url: Uri = uri"https://icanhazdadjoke.com/"
 
     override def getJoke: FE[HttpError, JokeResponse] =

@@ -1,6 +1,7 @@
 package cats_mtl_example.config
 
 import cats.effect.*
+import extras.render.Render
 import org.http4s.Uri
 import pureconfig.module.http4s.*
 import pureconfig.{ConfigReader, ConfigSource}
@@ -23,7 +24,9 @@ object AppConfig {
   final case class ServerConfig(host: ServerConfig.HostAddress, port: ServerConfig.Port) derives ConfigReader
   object ServerConfig {
     type HostAddress = HostAddress.Type
-    object HostAddress extends Newtype[Uri], PureconfigNewtypeConfigReader[Uri]
+    object HostAddress extends Newtype[Uri], PureconfigNewtypeConfigReader[Uri] {
+      given renderHostAddress: Render[HostAddress] = Render.render(_.value.renderString)
+    }
 
     type Port = Port.Type
     object Port extends Newtype[PortNumber], PureconfigNewtypeConfigReader[PortNumber]
