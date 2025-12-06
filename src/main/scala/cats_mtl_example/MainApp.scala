@@ -16,23 +16,25 @@ object MainApp extends IOApp.Simple {
 
 //  type F[A] = EitherT[IO, AppError, A]
   type F[A] = IO[A]
+  val F: IO.type = IO
 
-//  given val dsl: Http4sDsl[F] = org.http4s.dsl.io
   given dsl: Http4sDsl[F] = new Http4sDslBinCompat[F] {}
 
   override def run: IO[Unit] =
-    (for {
-      appConfig <- AppConfig
-                     .load[F]
-                     .eitherT
-                     .flatMapF(conf => conf.asRight.pure[IO])
-                     .leftFlatMap(err => IO.pure(InvalidConfigError(err.prettyPrint(0)).asLeft[AppConfig]).eitherT)
-      _         <- MainServer
-                     .stream[F](appConfig)
-                     .compile
-                     .drain
-                     .rightT
-    } yield ())
-      .foldF(err => IO.raiseError(AppError.toException(err)), _ => IO.unit)
+    for {
+      appConfigOrError <- AppConfig
+                            .load[F]
+                            .innerLeftMap(err => InvalidConfigError(err.prettyPrint(0)))
+
+      _ <- appConfigOrError match {
+             case Right(appConfig) =>
+               MainServer
+                 .stream[F](appConfig)
+                 .compile
+                 .drain
+             case Left(err) =>
+               F.raiseError(AppError.toException(err))
+           }
+    } yield ()
 
 }
