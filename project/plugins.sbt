@@ -4,8 +4,8 @@ val sbtDevOopsVersion = "3.3.1"
 
 addSbtPlugin("io.kevinlee" %% "sbt-devoops-scala"     % sbtDevOopsVersion)
 addSbtPlugin("io.kevinlee" %% "sbt-devoops-sbt-extra" % sbtDevOopsVersion)
-addSbtPlugin("io.kevinlee" %% "sbt-devoops-starter" % sbtDevOopsVersion)
+addSbtPlugin("io.kevinlee" %% "sbt-devoops-starter"   % sbtDevOopsVersion)
 
-addSbtPlugin("org.wartremover" % "sbt-wartremover" % "3.4.1")
+addSbtPlugin("org.wartremover" % "sbt-wartremover" % "3.4.2")
 addSbtPlugin("ch.epfl.scala"   % "sbt-scalafix"    % "0.14.4")
 addSbtPlugin("org.scalameta"   % "sbt-scalafmt"    % "2.5.6")
