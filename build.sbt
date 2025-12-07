@@ -92,8 +92,9 @@ lazy val libs = new {
   lazy val logback = "ch.qos.logback" % "logback-classic" % props.LogbackVersion
 
   lazy val loggerF = List(
-    "io.kevinlee" %% "logger-f-cats"  % props.LoggerFVersion,
-    "io.kevinlee" %% "logger-f-slf4j" % props.LoggerFVersion,
+    "io.kevinlee" %% "logger-f-cats"     % props.LoggerFVersion,
+    "io.kevinlee" %% "logger-f-slf4j"    % props.LoggerFVersion,
+    "io.kevinlee" %% "logger-f-test-kit" % props.LoggerFVersion % Test,
   )
 
   lazy val extras = List(

@@ -58,10 +58,10 @@ object JokeClient {
   object JokeResponse {
 
     type Id = Id.Type
-    object Id extends Newtype[PosLong], CirceNewtypeCodec[PosLong]
+    object Id extends Newtype[NonBlankString], CirceNewtypeCodec[NonBlankString]
 
     type Joke = Joke.Type
-    object Joke extends Newtype[NonEmptyString], CirceNewtypeCodec[NonEmptyString]
+    object Joke extends Newtype[NonBlankString], CirceNewtypeCodec[NonBlankString]
 
   }
 }
