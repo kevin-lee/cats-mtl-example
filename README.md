@@ -22,31 +22,56 @@ Once you get log messages like this
              |_|
 [ioapp-compute-0] INFO  o.h.b.s.BlazeServerBuilder - http4s v0.22.8 on blaze v0.15.2 started at http://[::]:8080/
 ```
-
+***
 In development, `reStart` and `reStop` are recommended to start and stop the app.
 
-1. Access [http://localhost:8080/hello](http://localhost:8080/hello) in your web browser. It will give the following JSON.
-    ```json
-    {
-      "result": "Hello, World!"
-    }
-    ```
+## Index Page
 
-2. Access [http://localhost:8080/hello/YOUR_NAME](http://localhost:8080/hello/YOUR_NAME) in your web browser. It will give the following JSON.
-    ```json
-    {
-      "result": "Hello, YOUR_NAME"
-    }
-    ``` 
+Access [http://localhost:8080/html/index.html](http://localhost:8080/html/index.html) to access an example static html page. It's handled by `StaticHtmlService`.
 
-3. Access [http://localhost:8080/hello/add](http://localhost:8080/hello/add) with two numbers in the path.
+```
+http://localhost:8080/html/index.html
+```
+
+## API
+
+### `hello world`
+
+Access [http://localhost:8080/hello](http://localhost:8080/hello) in your web browser. It will give the following JSON.
+```
+http://localhost:8080/hello
+```
+```json
+{
+  "result": "Hello, World!"
+}
+```
+
+### `hello NAME`
+
+Access [http://localhost:8080/hello/YOUR_NAME](http://localhost:8080/hello/YOUR_NAME) in your web browser. It will give the following JSON.
+```
+http://localhost:8080/hello/YOUR_NAME
+```
+```json
+{
+  "result": "Hello, YOUR_NAME"
+}
+``` 
+
+### `add Int + Int`
+
+Access [http://localhost:8080/hello/add](http://localhost:8080/hello/add) with two numbers in the path.
 e.g.) [http://localhost:8080/hello/add/2/5](http://localhost:8080/hello/add/2/5)
-    
-    Result:
-    ```json
-    {
-      "result": 7
-    }
-    ```
-    
-4. Access [http://localhost:8080/html/index.html](http://localhost:8080/html/index.html) to access an example static html page. It's handled by `StaticHtmlService`.
+
+```
+http://localhost:8080/hello/add/2/5
+```
+
+Result:
+```json
+{
+  "result": 7
+}
+```
+
