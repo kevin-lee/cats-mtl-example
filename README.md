@@ -75,3 +75,22 @@ Result:
 }
 ```
 
+### joke
+
+Access [http://localhost:8080/joke](http://localhost:8080/joke). It will give the following JSON.
+```
+http://localhost:8080/joke
+```
+```json
+{
+  "id": "id",
+  "joke": "joke"
+}
+```
+e.g.)
+```json
+{
+  "id": "MeaFYLBAQuc",
+  "joke": "Have you heard the rumor going around about butter? Never mind, I shouldn't spread it."
+}
+```
