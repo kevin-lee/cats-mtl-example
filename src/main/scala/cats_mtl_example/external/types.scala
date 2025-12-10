@@ -81,26 +81,26 @@ object types {
   }
 
 //  sealed abstract class HttpError(override val message: String) extends AppError(message)
-  sealed abstract class HttpError(val message: String)
-  object HttpError {
-    final case class ResponseBodyDecodingFailure(override val message: String, cause: Option[Throwable])
-        extends HttpError(message)
-    final case class FailedResponse(httpResponse: HttpResponse)
+  enum HttpError(val message: String) {
+    case ResponseBodyDecodingFailure(override val message: String, cause: Option[Throwable]) extends HttpError(message)
+    case FailedResponse(httpResponse: HttpResponse)
         extends HttpError(
           s"HttpError(status=${httpResponse.status.value.renderString}, body=${httpResponse.body.fold("")(_.value)})"
         )
+  }
+  object HttpError {
 
     def responseBodyDecodingFailure(message: String, cause: Option[Throwable]): HttpError =
-      ResponseBodyDecodingFailure(message, cause)
+      HttpError.ResponseBodyDecodingFailure(message, cause)
 
     def failedResponse(httpResponse: HttpResponse): HttpError =
-      FailedResponse(httpResponse)
+      HttpError.FailedResponse(httpResponse)
 
     def render(httpError: HttpError): String = httpError match {
-      case ResponseBodyDecodingFailure(message, cause) =>
+      case HttpError.ResponseBodyDecodingFailure(message, cause) =>
         s"Decoding ResponseBody has failed: message=$message, cause=${cause.fold("")(_.toString)}"
 
-      case err @ FailedResponse(_) =>
+      case err @ HttpError.FailedResponse(_) =>
         s"Response failure: ${err.message}"
     }
   }
