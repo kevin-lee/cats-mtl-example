@@ -1,10 +1,10 @@
 ThisBuild / organization := props.Org
 ThisBuild / scalaVersion := props.ScalaVersion
-ThisBuild / version      := props.ProjectVersion
+ThisBuild / version := props.ProjectVersion
 
 lazy val http4sExampleApp = (project in file("."))
   .settings(
-    name              := props.ProjectName,
+    name := props.ProjectName,
     scalacOptions ++= List("-explain"),
     semanticdbEnabled := true,
     semanticdbVersion := scalafixSemanticdb.revision,
@@ -31,7 +31,7 @@ lazy val props = new {
 
   val CirceVersion = "0.14.15"
 
-  val EffectieVersion = "2.2.0"
+  val EffectieVersion = "2.3.0"
 
   val Http4sVersion      = "0.23.33"
   val Http4sBlazeVersion = "0.23.17"
