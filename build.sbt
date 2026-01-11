@@ -38,7 +38,7 @@ lazy val props = new {
 
   val PureconfigVersion = "0.17.9"
 
-  val LogbackVersion = "1.5.23"
+  val LogbackVersion = "1.5.24"
 
   val LoggerFVersion = "2.8.1"
 
