@@ -21,7 +21,7 @@ lazy val props = new {
 
   val ProjectName = "cats-mtl-example-app"
 
-  val Refined4sVersion = "1.14.1"
+  val Refined4sVersion = "1.14.2"
 
   val CatsVersion = "2.13.0"
 
