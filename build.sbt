@@ -33,7 +33,7 @@ lazy val props = new {
 
   val EffectieVersion = "2.3.0"
 
-  val Http4sVersion      = "0.23.33"
+  val Http4sVersion      = "0.23.34"
   val Http4sBlazeVersion = "0.23.17"
 
   val PureconfigVersion = "0.17.10"
