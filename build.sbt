@@ -31,7 +31,7 @@ lazy val props = new {
 
   val CirceVersion = "0.14.15"
 
-  val EffectieVersion = "2.3.0"
+  val EffectieVersion = "2.4.0"
 
   val Http4sVersion      = "0.23.34"
   val Http4sBlazeVersion = "0.23.17"
