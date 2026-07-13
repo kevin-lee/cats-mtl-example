@@ -17,7 +17,7 @@ lazy val props = new {
 
   val ProjectVersion = "0.1.0-SNAPSHOT"
 
-  val ScalaVersion = "3.7.4"
+  val ScalaVersion = "3.8.4"
 
   val ProjectName = "cats-mtl-example-app"
 
