@@ -46,7 +46,7 @@ lazy val props = new {
 
   val KittensVersion = "3.5.0"
 
-  val hedgehogVersion = "0.13.0"
+  val hedgehogVersion = "0.13.1"
 }
 
 lazy val libs = new {
