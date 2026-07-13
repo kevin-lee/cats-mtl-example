@@ -40,8 +40,8 @@ object JokeRoutes {
               errorMessage.logS_(error) *>
                 InternalServerError(ErrorMessage(errorMessage))
 
-            case err @ HttpError.FailedResponse(response) =>
-              val errorMessage = s"Something went wrong: ${err.message}"
+            case err @ HttpError.FailedResponse(_) =>
+              val errorMessage = show"Something went wrong: ${err.message}"
               errorMessage.logS_(error) *>
                 InternalServerError(ErrorMessage(errorMessage))
           }

@@ -1,5 +1,7 @@
 package cats_mtl_example.external
 
+import cats.*
+import cats.derived.*
 import cats.effect.Concurrent
 import cats.syntax.all.*
 import fs2.text
@@ -7,6 +9,7 @@ import org.http4s
 import org.http4s.Status.Successful
 import org.http4s.{EntityDecoder, Response}
 import refined4s.*
+import refined4s.modules.cats.derivation.CatsEqShow
 import refined4s.types.all.*
 
 /** @author Kevin Lee
@@ -14,10 +17,10 @@ import refined4s.types.all.*
   */
 object types {
 
-  final case class HttpResponse(status: HttpResponse.Status, body: Option[HttpResponse.Body])
+  final case class HttpResponse(status: HttpResponse.Status, body: Option[HttpResponse.Body]) derives Eq, Show
   object HttpResponse {
 
-    enum TakeNBytes {
+    enum TakeNBytes derives Eq, Show {
       case AllBytes
       case NBytes(n: NonNegLong)
     }
@@ -73,10 +76,10 @@ object types {
     }
 
     type Status = Status.Type
-    object Status extends Newtype[http4s.Status]
+    object Status extends Newtype[http4s.Status], CatsEqShow[http4s.Status]
 
     type Body = Body.Type
-    object Body extends Newtype[String]
+    object Body extends Newtype[String], CatsEqShow[String]
 
   }
 
