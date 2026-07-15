@@ -8,6 +8,6 @@ addSbtPlugin("io.kevinlee" %% "sbt-devoops-starter"   % sbtDevOopsVersion)
 
 addSbtPlugin("org.wartremover" % "sbt-wartremover" % "3.6.1")
 
-addSbtPlugin("ch.epfl.scala"   % "sbt-scalafix"    % "0.14.7")
+addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.14.7")
 
-addSbtPlugin("org.scalameta"   % "sbt-scalafmt"    % "2.5.6")
+addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.6.1")
