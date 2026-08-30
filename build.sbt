@@ -25,7 +25,7 @@ lazy val props = new {
 
   val CatsVersion = "2.13.0"
 
-  val CatsEffectVersion = "3.7.0"
+  val CatsEffectVersion = "3.7.1"
 
   val CatsMtlVersion = "1.7.0"
 
