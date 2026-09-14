@@ -42,7 +42,7 @@ lazy val props = new {
 
   val LoggerFVersion = "2.12.0"
 
-  val extrasVersion = "0.55.0"
+  val extrasVersion = "0.56.0"
 
   val KittensVersion = "3.5.0"
 
