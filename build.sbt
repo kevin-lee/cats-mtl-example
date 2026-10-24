@@ -29,24 +29,24 @@ lazy val props = new {
 
   val CatsMtlVersion = "1.7.0"
 
-  val CirceVersion = "0.14.16"
+  val CirceVersion = "0.14.17"
 
   val EffectieVersion = "2.5.0"
 
   val Http4sVersion      = "0.23.38"
   val Http4sBlazeVersion = "0.23.18"
 
-  val PureconfigVersion = "0.17.10"
+  val PureconfigVersion = "0.17.11"
 
   val LogbackVersion = "1.5.38"
 
   val LoggerFVersion = "2.14.0"
 
-  val extrasVersion = "0.56.0"
+  val extrasVersion = "0.57.0"
 
   val KittensVersion = "3.5.0"
 
-  val hedgehogVersion = "0.14.0"
+  val hedgehogVersion = "0.15.0"
 }
 
 lazy val libs = new {
